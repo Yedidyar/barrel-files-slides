@@ -8,11 +8,17 @@ importers:
 
   .:
     devDependencies:
+      '@iconify-json/mdi':
+        specifier: ^1.2.3
+        version: 1.2.3
       '@slidev/cli':
         specifier: ^52.0.0
         version: 52.14.1(@nuxt/kit@3.21.1)(@types/markdown-it@14.1.2)(@types/node@22.19.15)(@vue/compiler-sfc@3.5.30)(markdown-it@14.1.1)(postcss@8.5.8)
       '@slidev/theme-default':
         specifier: latest
+        version: 0.25.0
+      '@slidev/theme-seriph':
+        specifier: ^0.25.0
         version: 0.25.0
 
 packages:
@@ -348,6 +354,9 @@ packages:
 
   '@iconify-json/carbon@1.2.19':
     resolution: {integrity: sha512-l89XjtEeSA5fxlxPTNSU9AA+rxaz/Dn0X/ux0/3awR+tAayY8iJqWQu3AKxhchfx3LB/fX1Nv3ZppZzrBAt7aA==}
+
+  '@iconify-json/mdi@1.2.3':
+    resolution: {integrity: sha512-O3cLwbDOK7NNDf2ihaQOH5F9JglnulNDFV7WprU2dSoZu3h3cWH//h74uQAB87brHmvFVxIOkuBX2sZSzYhScg==}
 
   '@iconify-json/ph@1.2.2':
     resolution: {integrity: sha512-PgkEZNtqa8hBGjHXQa4pMwZa93hmfu8FUSjs/nv4oUU6yLsgv+gh9nu28Kqi8Fz9CCVu4hj1MZs9/60J57IzFw==}
@@ -783,6 +792,10 @@ packages:
 
   '@slidev/theme-default@0.25.0':
     resolution: {integrity: sha512-iWvthH1Ny+i6gTwRnEeeU+EiqsHC56UdEO45bqLSNmymRAOWkKUJ/M0o7iahLzHSXsiPu71B7C715WxqjXk2hw==}
+    engines: {node: '>=14.0.0', slidev: '>=v0.47.0'}
+
+  '@slidev/theme-seriph@0.25.0':
+    resolution: {integrity: sha512-PnFQbn4I70+/cVie5iAr0Im6sYvnwjkO7Yj5KonTyJZFFJFytckLTrD3ijft/J4cRnz7OmSzTyQKNX1FN/x0YQ==}
     engines: {node: '>=14.0.0', slidev: '>=v0.47.0'}
 
   '@slidev/types@0.47.5':
@@ -3149,6 +3162,10 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
+  '@iconify-json/mdi@1.2.3':
+    dependencies:
+      '@iconify/types': 2.0.0
+
   '@iconify-json/ph@1.2.2':
     dependencies:
       '@iconify/types': 2.0.0
@@ -3678,6 +3695,12 @@ snapshots:
       roughjs: 4.6.6
 
   '@slidev/theme-default@0.25.0':
+    dependencies:
+      '@slidev/types': 0.47.5
+      codemirror-theme-vars: 0.1.2
+      prism-theme-vars: 0.2.5
+
+  '@slidev/theme-seriph@0.25.0':
     dependencies:
       '@slidev/types': 0.47.5
       codemirror-theme-vars: 0.1.2
