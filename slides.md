@@ -71,9 +71,9 @@ class: text-center
 
 <div class="text-4xl font-bold leading-relaxed">
 
-What if I told you this <span v-mark.circle.red="1">innocent line</span>
+What if I told you this innocent line
 
-can make part of your test suite run
+can make your test suite run
 
 <span v-click class="text-red-400 text-6xl font-black">up to 50% slower?</span>
 
@@ -157,15 +157,6 @@ The audience needs to feel seen. If you jump too fast into "this is bad," people
 <mdi-information class="text-blue-400" /> This is not a fringe pattern. It is mainstream, recommended, and everywhere.
 </div>
 
-<!--
-Spend a moment on each point. The audience should be nodding along.
--->
-
----
-layout: quote
----
-
-# "When I was new to programming in the army, I saw this pattern everywhere. It looked reasonable. It looked professional. So I adopted it without really questioning it."
 
 <!--
 This is the personal, human moment. It makes you relatable. Pause after this.
@@ -178,6 +169,11 @@ layout: section
 # The Warning I Ignored
 
 <div class="text-xl text-gray-400 mt-2">Smart engineers kept saying "don't do this." I didn't listen.</div>
+
+<div class="flex justify-center gap-12 mt-12">
+  <img src="/evan.png" class="h-40 rounded-full object-cover" alt="Evan" />
+  <img src="/dominik.png" class="h-40 rounded-full object-cover" alt="Dominik" />
+</div>
 
 ---
 layout: center
@@ -197,6 +193,8 @@ layout: center
 
 <!--
 This sets up the turning point: you were skeptical until reality forced you to care.
+
+# "When I was new to programming in the army, I saw this pattern everywhere. It looked reasonable. It looked professional. So I adopted it without really questioning it."
 -->
 
 ---
