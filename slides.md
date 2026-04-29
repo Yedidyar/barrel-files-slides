@@ -18,11 +18,12 @@ fonts:
   provider: google
 defaults:
   transition: slide-left
+mdc: true
 ---
 
 # This Is a Toll You Should Not Be Paying
 
-<div v-click class="mt-8 text-xl text-gray-400">
+<div class="mt-8 text-xl text-gray-400">
 One line. Every codebase. Zero suspicion.
 </div>
 
@@ -75,7 +76,7 @@ What if I told you this innocent line
 
 can make your test suite run
 
-<span v-click class="text-red-400 text-6xl font-black">up to 50% slower?</span>
+<span v-click class="text-red-400 text-6xl font-black">up to 75% slower?</span>
 
 </div>
 
@@ -127,7 +128,7 @@ import {
 } from '../components'
 ```
 
-<div v-click class="mt-4 text-green-400 text-sm flex items-center gap-2">
+<div v-after class="mt-4 text-green-400 text-sm flex items-center gap-2">
 <mdi-emoticon-happy-outline class="text-lg" /> Clean, elegant, organized
 </div>
 
@@ -157,7 +158,6 @@ The audience needs to feel seen. If you jump too fast into "this is bad," people
 <mdi-information class="text-blue-400" /> This is not a fringe pattern. It is mainstream, recommended, and everywhere.
 </div>
 
-
 <!--
 This is the personal, human moment. It makes you relatable. Pause after this.
 -->
@@ -181,11 +181,11 @@ layout: center
 
 <div class="text-2xl leading-relaxed max-w-2xl mx-auto">
 
-<div v-click>I kept seeing very smart engineers say: <span v-mark.underline.red="1">don't use barrel files.</span></div>
+<div>I kept seeing very smart engineers say: <span v-mark.underline.red>don't use barrel files.</span></div>
 
 <div v-click class="mt-6">But honestly? <span class="text-gray-400">It didn't bother me much.</span></div>
 
-<div v-click class="mt-6">I hadn't been <span v-mark.highlight.orange="3">hurt by it</span> yet.</div>
+<div v-click class="mt-6">I hadn't been <span v-mark.highlight.orange="2">hurt by it</span> yet.</div>
 
 <div v-click class="mt-6">It felt like one of those opinions people repeat <br/> <span class="text-gray-500">without showing the actual cost.</span></div>
 
@@ -300,7 +300,7 @@ import { calculateTax } from './utils'
 
 Where `./utils/index.ts` contains:
 
-```ts {all|1-8|all}
+```ts 
 export { calculateTax } from './calculateTax'
 export { formatCurrency } from './formatCurrency'
 export { validateEmail } from './validateEmail'
@@ -327,7 +327,7 @@ This is the key insight. The barrel re-exports EVERYTHING. Tools have to resolve
 
 <div class="mt-2">
 
-```mermaid {theme: 'dark', scale: 0.65}
+```mermaid {theme: 'dark', scale: 0.5}
 graph TD
     A["consumer.ts"] -->|"import { calculateTax }"| IDX["utils/index.ts"]
     IDX --> B["calculateTax.ts"]
@@ -553,6 +553,134 @@ The magic move animation makes this transformation really visual. More verbose, 
 -->
 
 ---
+layout: section
+---
+
+# But What About Library Packages?
+
+<div class="text-xl text-gray-400 mt-2">Sometimes you genuinely need <em>one</em> public entry point.</div>
+
+---
+
+# Two Scripts, One Goal
+
+<div class="text-gray-400 mt-1 text-sm">A disciplined public package entry — without the deep barrel chain</div>
+
+<div class="grid grid-cols-2 gap-6 mt-6">
+
+<div v-click class="p-5 rounded-xl bg-indigo-500/10 border border-indigo-500/30">
+<div class="font-mono font-bold text-indigo-300 text-lg mb-3">barrel-flatten.ts</div>
+<div class="text-sm leading-relaxed text-gray-300">
+
+**Collapses chains** of pure barrels into one flattened file.
+
+The entrypoint becomes a short list of re-exports pointing **directly** at real modules — no more hopping through nested `index.ts` layers.
+
+</div>
+<div class="mt-4 text-xs text-gray-500 border-t border-white/10 pt-3">
+<mdi-alert-circle-outline class="text-amber-400" /> Detects barrel cycles → throws. Forces you to break rings explicitly.
+</div>
+</div>
+
+<div v-click class="p-5 rounded-xl bg-purple-500/10 border border-purple-500/30">
+<div class="font-mono font-bold text-purple-300 text-lg mb-3">prune-barrel-exports.mjs</div>
+<div class="text-sm leading-relaxed text-gray-300">
+
+**Narrows** the `export *` explosion using the TypeScript compiler.
+
+Finds which symbols are **actually imported** across the repo, then rewrites `export *` into named exports for only those — or drops unused lines entirely.
+
+</div>
+<div class="mt-4 text-xs text-gray-500 border-t border-white/10 pt-3">
+<mdi-magnify class="text-purple-400" /> Evidence-based: driven by the compiler's view, not guessing.
+</div>
+</div>
+
+</div>
+
+<div v-click class="mt-6 p-3 rounded-lg bg-white/5 border border-white/10 text-sm text-center">
+<strong>Mental model:</strong> Think of <code>index.ts</code> as a <strong>shop window</strong>. Flatten removes false walls behind it. Prune stops displaying every product when customers only buy three SKUs.
+</div>
+
+<!--
+These two scripts are the package-level companions to the lint rule. They don't replace the migration — they make the public API clean *after* internals are using direct imports.
+-->
+
+---
+
+# `barrel-flatten` — How It Works
+
+````md magic-move
+```ts
+// Before: deep barrel chain
+// packages/shared/src/index.ts
+export * from './lib/index'
+
+// packages/shared/src/lib/index.ts
+export * from './foo/index'
+export * from './bar/index'
+
+// packages/shared/src/lib/foo/index.ts
+export * from './foo-util'
+export * from './foo-helper'
+```
+
+```ts
+// barrel-flatten walks the chain...
+// Pure barrel? Follow it. Real module? Stop.
+
+// packages/shared/src/index.generated.ts  ← output
+export * from './lib/foo/foo-util'
+export * from './lib/foo/foo-helper'
+export * from './lib/bar/real-module'
+// One flat file. Direct paths. No indirection.
+```
+````
+
+<div v-click class="mt-6 text-center text-gray-400 text-sm">
+The walker stops at any file that <strong>does real work</strong> (has imports or declarations). <br/>
+Pure pass-through barrels get inlined. Genuine modules stay as targets.
+</div>
+
+<!--
+The key insight: pure barrels are inlined, real modules are the stopping points. This eliminates indirection without breaking encapsulation.
+-->
+
+---
+
+# `prune-barrel-exports` — How It Works
+
+````md magic-move
+```ts
+// Before: export * advertises everything
+// packages/shared/src/index.ts
+export * from './formatters'   // 12 symbols
+export * from './validators'   // 8 symbols
+export * from './transforms'   // 15 symbols
+
+// Total: 35 symbols exported. Consumers actually use: 4.
+```
+
+```ts
+// After: prune finds actual usage via TS compiler
+// packages/shared/src/index.ts
+export { formatDate, formatCurrency } from './formatters'
+export { validateEmail } from './validators'
+export { slugify } from './transforms'
+
+// Only what's actually imported. Pruned with evidence.
+```
+````
+
+<div v-click class="mt-6 p-3 rounded-lg bg-purple-500/10 border border-purple-500/20 text-sm">
+<mdi-shield-check class="text-purple-400" /> Conservative for <code>import * as ns</code> and <code>export * from</code> — treats those symbols as widely used when narrowing isn't safe without deeper analysis.
+</div>
+
+<!--
+This one is evidence-based: it asks the TypeScript compiler "who actually imports what from this barrel?" and rewrites accordingly.
+-->
+
+---
 layout: center
 class: text-center
 ---
@@ -565,15 +693,11 @@ class: text-center
 layout: fact
 ---
 
-# Up to 50%
-## reduction in unit test runtime
+# Up to 300%
+## speed up in unit test runtime
 
 <div class="text-lg text-gray-400 mt-4">
 for the migrated portion of the test suite
-</div>
-
-<div v-click class="mt-8 text-sm text-gray-500 max-w-lg mx-auto">
-In an internal proof of concept, removing barrel-based imports reduced runtime for part of our unit test suite by up to 50%, with even bigger improvements on some machines.
 </div>
 
 <!--
@@ -591,7 +715,7 @@ Let this number sit. This is the payoff moment. Be precise about scoping: "part 
 <div>
 <div class="text-sm text-gray-400 uppercase tracking-wider mb-3">Before</div>
 <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-6">
-<div class="text-5xl font-black text-red-400">~60s</div>
+<div class="text-5xl font-black text-red-400">~12m</div>
 <div class="text-gray-400 mt-2">Test suite runtime</div>
 <div class="mt-4 space-y-2 text-sm text-gray-500">
 <div class="flex items-center gap-2"><mdi-file-tree class="text-red-400" /> Deep barrel chains</div>
@@ -604,7 +728,7 @@ Let this number sit. This is the payoff moment. Be precise about scoping: "part 
 <div v-click>
 <div class="text-sm text-gray-400 uppercase tracking-wider mb-3">After</div>
 <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-6">
-<div class="text-5xl font-black text-green-400">~30s</div>
+<div class="text-5xl font-black text-green-400">~4m</div>
 <div class="text-gray-400 mt-2">Test suite runtime</div>
 <div class="mt-4 space-y-2 text-sm text-gray-500">
 <div class="flex items-center gap-2"><mdi-ray-start-arrow class="text-green-400" /> Direct imports only</div>
@@ -620,7 +744,7 @@ Let this number sit. This is the payoff moment. Be precise about scoping: "part 
 
 <div v-click class="mt-6 text-center">
 <div class="inline-flex items-center gap-2 bg-green-500/10 text-green-400 rounded-full px-6 py-2 text-lg font-bold">
-<mdi-arrow-down class="text-xl" /> 50% faster
+<mdi-arrow-up class="text-xl" /> 300% faster
 </div>
 </div>
 
@@ -675,14 +799,16 @@ Make this feel concrete and actionable. People should be thinking about their ow
 -->
 
 ---
+zoom: 0.85
+---
 
 # 3. Prevent Regressions
 
-<div class="mt-8 space-y-4">
+<div class="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-[0.9rem] leading-snug items-start">
 
-<div v-click class="p-4 rounded-xl bg-white/5 border border-white/10">
+<div v-click class="p-3 rounded-xl bg-white/5 border border-white/10 min-w-0">
 
-**ESLint: `no-barrel-file` / `no-barrel-import`**
+<div class="font-semibold mb-1">ESLint: `no-barrel-file` / `no-barrel-import`</div>
 
 ```json
 {
@@ -692,12 +818,12 @@ Make this feel concrete and actionable. People should be thinking about their ow
 }
 ```
 
-<div class="text-sm text-gray-400 mt-2">Prevents new barrel imports from being introduced in app code</div>
+<div class="text-xs text-gray-400 mt-1">Prevents new barrel imports in app code</div>
 </div>
 
-<div v-click class="p-4 rounded-xl bg-white/5 border border-white/10">
+<div v-click class="p-3 rounded-xl bg-white/5 border border-white/10 min-w-0">
 
-**ESLint: `import/no-cycle`**
+<div class="font-semibold mb-1">ESLint: `import/no-cycle`</div>
 
 ```json
 {
@@ -707,14 +833,14 @@ Make this feel concrete and actionable. People should be thinking about their ow
 }
 ```
 
-<div class="text-sm text-gray-400 mt-2">Catches circular dependencies that barrels make easy to create</div>
+<div class="text-xs text-gray-400 mt-1">Catches cycles barrels make easy to create</div>
 </div>
 
-<div v-click class="p-4 rounded-xl bg-white/5 border border-white/10">
+<div v-click class="col-span-2 p-3 rounded-xl bg-white/5 border border-white/10">
 
-**Clear team convention**
+<div class="font-semibold mb-0.5">Clear team convention</div>
 
-<div class="text-sm text-gray-400 mt-2">Barrel files are for <span class="text-green-400">public package interfaces</span>, not for <span class="text-red-400">internal application code</span></div>
+<div class="text-sm text-gray-400">Barrel files are for <span class="text-green-400">public package interfaces</span>, not for <span class="text-red-400">internal application code</span></div>
 </div>
 
 </div>
@@ -806,11 +932,7 @@ if they make the dependency graph <span v-mark.circle.red="1">dirtier</span>.
 
 <div v-click class="mt-12 text-lg text-gray-400">
 Use barrel files <strong class="text-white">intentionally</strong>, not by default.
-</div>
-
-<div v-click class="mt-12 text-gray-500">
-Thank you.
-</div>
+</div>  
 
 <!--
 End on the memorable one-liner. Let it sit. Then open for questions.
